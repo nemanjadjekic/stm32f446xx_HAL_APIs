@@ -7,7 +7,9 @@
 
 #include <string.h>
 #include "main.h"
-#include "stm32f4xx_hal.h"
+
+#define TRUE  1
+#define FALSE 0
 
 void SystemClockConfig(void);
 void UART2_Init(void);
@@ -17,6 +19,11 @@ uint8_t convert_to_capital(uint8_t data);
 UART_HandleTypeDef huart2;
 
 char *sent_data = "This application is running!\r\n";
+
+uint8_t rcvd_data;
+uint8_t data_buffer[100];
+uint8_t reception_complete = FALSE;
+uint32_t count = 0;
 
 int main(void)
 {
@@ -30,37 +37,10 @@ int main(void)
         Error_handler();
     }
 
+    while(reception_complete != TRUE)
+        HAL_UART_Receive_IT(&huart2, &rcvd_data, 1);
 
-    uint8_t rcvd_data;
-    uint8_t data_buffer[100];
-    uint32_t count = 0;
-
-    while(1)
-    {
-        HAL_UART_Receive(&huart2, &rcvd_data, 1, HAL_MAX_DELAY);
-        if(rcvd_data == '\r')
-        {
-            break;
-        }
-        else
-        {
-            data_buffer[count++] = rcvd_data;
-        }
-    }
-    data_buffer[count++]= '\r';
-
-    /* Capitalize first character of every word in a string */
-    data_buffer[0] = convert_to_capital(data_buffer[0]);
-    for(int i = 0; i < count; i++)
-    {
-        if(data_buffer[i] == ' ')
-        {
-            ++i;
-            data_buffer[i] = convert_to_capital(data_buffer[i]);
-        }
-    }
-
-    HAL_UART_Transmit(&huart2, data_buffer, count, HAL_MAX_DELAY);
+    while(1);
 
     return 0;
 }
@@ -102,4 +82,32 @@ uint8_t convert_to_capital(uint8_t data)
 void Error_handler(void)
 {
     while (1);
+}
+
+
+/* Weak Functions */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if(rcvd_data == '\r')
+    {
+        reception_complete = TRUE;
+        data_buffer[count++]= '\r';
+
+        /* Capitalize first character of every word in a string */
+        data_buffer[0] = convert_to_capital(data_buffer[0]);
+        for(int i = 0; i < count; i++)
+        {
+            if(data_buffer[i] == ' ')
+            {
+                ++i;
+                data_buffer[i] = convert_to_capital(data_buffer[i]);
+            }
+        }
+
+        HAL_UART_Transmit(&huart2, data_buffer, count, HAL_MAX_DELAY);
+    }
+    else
+    {
+        data_buffer[count++] = rcvd_data;
+    }
 }
