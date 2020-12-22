@@ -12,10 +12,11 @@
 void SystemClockConfig(void);
 void UART2_Init(void);
 void Error_handler(void);
+uint8_t convert_to_capital(uint8_t data);
 
 UART_HandleTypeDef huart2;
 
-char *user_data = "This application is running!\r\n";
+char *sent_data = "This application is running!\r\n";
 
 int main(void)
 {
@@ -23,18 +24,53 @@ int main(void)
     SystemClockConfig();
     UART2_Init();
 
-    uint16_t data_length = strlen(user_data);
-    if (HAL_UART_Transmit(&huart2, (uint8_t*) user_data, data_length, HAL_MAX_DELAY) != HAL_OK)
+    uint16_t sent_data_length = strlen(sent_data);
+    if( HAL_UART_Transmit(&huart2, (uint8_t*) sent_data, sent_data_length, HAL_MAX_DELAY) != HAL_OK )
     {
         Error_handler();
     }
 
+
+    uint8_t rcvd_data;
+    uint8_t data_buffer[100];
+    uint32_t count = 0;
+
+    while(1)
+    {
+        HAL_UART_Receive(&huart2, &rcvd_data, 1, HAL_MAX_DELAY);
+        if(rcvd_data == '\r')
+        {
+            break;
+        }
+        else
+        {
+            data_buffer[count++] = rcvd_data;
+        }
+    }
+
+    /* Capitalize first character of every word in a string */
+    data_buffer[0] = convert_to_capital(data_buffer[0]);
+    for(int i = 0; i < count; i++)
+    {
+        if(data_buffer[i] == ' ')
+        {
+            ++i;
+            data_buffer[i] = convert_to_capital(data_buffer[i]);
+        }
+    }
+
+
+    HAL_UART_Transmit(&huart2, data_buffer, count, HAL_MAX_DELAY);
+
     return 0;
 }
 
-void SystemClockConfig(void) {
+
+void SystemClockConfig(void)
+{
 
 }
+
 
 void UART2_Init(void) {
     huart2.Instance = USART2;
@@ -45,11 +81,23 @@ void UART2_Init(void) {
     huart2.Init.Mode = UART_MODE_TX_RX;
     huart2.Init.Parity = UART_PARITY_NONE;
 
-    if (HAL_UART_Init(&huart2) != HAL_OK)
+    if(HAL_UART_Init(&huart2) != HAL_OK)
     {
         Error_handler();
     }
 }
+
+
+uint8_t convert_to_capital(uint8_t data)
+{
+    if(data >= 'a' && data <= 'z')
+    {
+        data -= ('a' - 'A');
+    }
+
+    return data;
+}
+
 
 void Error_handler(void)
 {
