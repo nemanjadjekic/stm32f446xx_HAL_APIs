@@ -23,18 +23,10 @@ int main(void)
     GPIO_Init();
     TIMER6_Init();
 
-    /* Starting a timer */
-    HAL_TIM_Base_Start(&htimer6);
+    /* Starting a timer in interrupt mode */
+    HAL_TIM_Base_Start_IT(&htimer6);
 
-    while(1)
-    {
-        /* Loop until the update event flag is set */
-        while( !(TIM6->SR & TIM_SR_UIF) );
-        /* The required time delay has been elapsed */
-        /* User code execution */
-        TIM6->SR = 0;
-        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-    }
+    while(1);
 
     return 0;
 }
@@ -67,6 +59,12 @@ void GPIO_Init(void)
     ledgpio.Mode = GPIO_MODE_OUTPUT_PP;
     ledgpio.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &ledgpio);
+}
+
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 }
 
 
