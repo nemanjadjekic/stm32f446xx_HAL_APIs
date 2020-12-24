@@ -28,6 +28,12 @@ int main(void)
     HAL_Init();
     UART2_Init();
 
+    uint16_t sent_data_length = strlen(sent_data);
+    if( HAL_UART_Transmit(&huart2, (uint8_t*) sent_data, sent_data_length, HAL_MAX_DELAY) != HAL_OK )
+    {
+        Error_handler();
+    }
+
     memset(&osc_init, 0, sizeof(osc_init));
     osc_init.OscillatorType = RCC_OSCILLATORTYPE_HSE;
     osc_init.HSEState = RCC_HSE_BYPASS;
