@@ -72,7 +72,8 @@ void SystemClockConfig(void)
 }
 
 
-void UART2_Init(void) {
+void UART2_Init(void)
+{
     huart2.Instance = USART2;
     huart2.Init.BaudRate = 115200;
     huart2.Init.WordLength = UART_WORDLENGTH_8B;
