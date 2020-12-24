@@ -5,6 +5,7 @@
  *      Author: nemanja
  */
 
+#include <stdio.h>
 #include "main.h"
 
 extern UART_HandleTypeDef huart2;
