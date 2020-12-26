@@ -9,7 +9,7 @@
 #include "stm32f4xx_hal.h"
 
 void SystemClockConfig(void);
-void Error_handler(void);
+void Error_Handler(void);
 void TIMER6_Init(void);
 void GPIO_Init(void);
 
@@ -53,7 +53,7 @@ void TIMER6_Init(void)
     htimer6.Init.Period = 64000-1;
     if( HAL_TIM_Base_Init(&htimer6) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 }
 
@@ -70,7 +70,7 @@ void GPIO_Init(void)
 }
 
 
-void Error_handler(void)
+void Error_Handler(void)
 {
     while (1);
 }

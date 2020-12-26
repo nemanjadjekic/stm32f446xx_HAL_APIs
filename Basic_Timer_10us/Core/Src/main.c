@@ -9,7 +9,7 @@
 #include "stm32f4xx_hal.h"
 
 void SystemClockConfig(uint8_t clock_freq);
-void Error_handler(void);
+void Error_Handler(void);
 void TIMER6_Init(void);
 void GPIO_Init(void);
 
@@ -113,12 +113,12 @@ void SystemClockConfig(uint8_t clock_freq)
 
     if( HAL_RCC_OscConfig(&osc_init) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     if( HAL_RCC_ClockConfig(&clk_init, FLatency) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     /* SysTick Configuration */
@@ -134,7 +134,7 @@ void TIMER6_Init(void)
     htimer6.Init.Period = 50-1;
     if( HAL_TIM_Base_Init(&htimer6) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 }
 
@@ -157,7 +157,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 }
 
 
-void Error_handler(void)
+void Error_Handler(void)
 {
     while (1);
 }

@@ -12,7 +12,7 @@
 
 void SystemClockConfig(uint8_t clock_freq);
 void SystemClockConfig_HSE(uint8_t clock_freq);
-void Error_handler(void);
+void Error_Handler(void);
 void GPIO_Init(void);
 void UART2_Init(void);
 void TIMER2_Init(void);
@@ -70,7 +70,7 @@ int main(void)
             user_signal_time_period = capture_diff * timer2_cnt_resoultion;
             user_signal_freq = 1/user_signal_time_period;
 
-            sprintf(usr_msg, "Frequency of the signal applied = %.2f\r\n", user_signal_freq);
+            sprintf(usr_msg, "Frequency of the signal applied = %.2f Hz\r\n", user_signal_freq);
             HAL_UART_Transmit(&huart2, (uint8_t*)usr_msg, strlen(usr_msg), HAL_MAX_DELAY);
 
             is_capture_done = FALSE;
@@ -163,12 +163,12 @@ void SystemClockConfig(uint8_t clock_freq)
 
     if( HAL_RCC_OscConfig(&osc_init) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     if( HAL_RCC_ClockConfig(&clk_init, FLatency) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     /* SysTick Configuration */
@@ -219,12 +219,12 @@ void SystemClockConfig_HSE(uint8_t clock_freq)
 
     if( HAL_RCC_OscConfig(&osc_init) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     if( HAL_RCC_ClockConfig(&clk_init, FLatency) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     /* SysTick Configuration */
@@ -257,7 +257,7 @@ void TIMER2_Init(void)
     htimer2.Init.Prescaler = 1;
     if( HAL_TIM_IC_Init(&htimer2) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     timer2IC_Config.ICFilter = 0;
@@ -266,7 +266,7 @@ void TIMER2_Init(void)
     timer2IC_Config.ICSelection = TIM_ICSELECTION_DIRECTTI;
     if( HAL_TIM_IC_ConfigChannel(&htimer2, &timer2IC_Config, TIM_CHANNEL_1) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 }
 
@@ -278,7 +278,7 @@ void TIMER6_Init(void)
     htimer6.Init.Period = 50-1;
     if( HAL_TIM_Base_Init(&htimer6) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 }
 
@@ -295,7 +295,7 @@ void UART2_Init(void)
 
     if(HAL_UART_Init(&huart2) != HAL_OK)
     {
-        Error_handler();
+        Error_Handler();
     }
 }
 
@@ -309,7 +309,7 @@ void LSE_Configuration(void)
     osc_init.LSEState = RCC_LSE_ON;
     if( HAL_RCC_OscConfig(&osc_init) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 #endif
 
@@ -336,7 +336,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 }
 
 
-void Error_handler(void)
+void Error_Handler(void)
 {
     while (1);
 }

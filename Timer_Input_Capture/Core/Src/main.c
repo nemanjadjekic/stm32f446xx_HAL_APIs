@@ -11,7 +11,7 @@
 #include "stm32f4xx_hal.h"
 
 void SystemClockConfig(uint8_t clock_freq);
-void Error_handler(void);
+void Error_Handler(void);
 void GPIO_Init(void);
 void UART2_Init(void);
 void TIMER2_Init(void);
@@ -157,12 +157,12 @@ void SystemClockConfig(uint8_t clock_freq)
 
     if( HAL_RCC_OscConfig(&osc_init) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     if( HAL_RCC_ClockConfig(&clk_init, FLatency) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     /* SysTick Configuration */
@@ -193,7 +193,7 @@ void TIMER2_Init(void)
     htimer2.Init.Prescaler = 1;
     if( HAL_TIM_IC_Init(&htimer2) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     timer2IC_Config.ICFilter = 0;
@@ -202,7 +202,7 @@ void TIMER2_Init(void)
     timer2IC_Config.ICSelection = TIM_ICSELECTION_DIRECTTI;
     if( HAL_TIM_IC_ConfigChannel(&htimer2, &timer2IC_Config, TIM_CHANNEL_1) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 }
 
@@ -219,7 +219,7 @@ void UART2_Init(void)
 
     if(HAL_UART_Init(&huart2) != HAL_OK)
     {
-        Error_handler();
+        Error_Handler();
     }
 }
 
@@ -233,7 +233,7 @@ void LSE_Configuration(void)
     osc_init.LSEState = RCC_LSE_ON;
     if( HAL_RCC_OscConfig(&osc_init) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 #endif
 
@@ -260,7 +260,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 }
 
 
-void Error_handler(void)
+void Error_Handler(void)
 {
     while (1);
 }

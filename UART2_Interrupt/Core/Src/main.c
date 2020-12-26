@@ -13,7 +13,7 @@
 
 void SystemClockConfig(void);
 void UART2_Init(void);
-void Error_handler(void);
+void Error_Handler(void);
 uint8_t convert_to_capital(uint8_t data);
 
 UART_HandleTypeDef huart2;
@@ -34,7 +34,7 @@ int main(void)
     uint16_t sent_data_length = strlen(sent_data);
     if( HAL_UART_Transmit(&huart2, (uint8_t*) sent_data, sent_data_length, HAL_MAX_DELAY) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     while(reception_complete != TRUE)
@@ -64,7 +64,7 @@ void UART2_Init(void)
 
     if(HAL_UART_Init(&huart2) != HAL_OK)
     {
-        Error_handler();
+        Error_Handler();
     }
 }
 
@@ -80,7 +80,7 @@ uint8_t convert_to_capital(uint8_t data)
 }
 
 
-void Error_handler(void)
+void Error_Handler(void)
 {
     while (1);
 }

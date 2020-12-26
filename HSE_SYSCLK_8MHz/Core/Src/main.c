@@ -13,7 +13,7 @@
 #define FALSE 0
 
 void UART2_Init(void);
-void Error_handler(void);
+void Error_Handler(void);
 
 UART_HandleTypeDef huart2;
 
@@ -32,7 +32,7 @@ int main(void)
     uint16_t sent_data_length = strlen(sent_data);
     if( HAL_UART_Transmit(&huart2, (uint8_t*) sent_data, sent_data_length, HAL_MAX_DELAY) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     memset(&osc_init, 0, sizeof(osc_init));
@@ -40,7 +40,7 @@ int main(void)
     osc_init.HSEState = RCC_HSE_BYPASS;
     if( HAL_RCC_OscConfig(&osc_init) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     clk_init.ClockType = RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | \
@@ -51,7 +51,7 @@ int main(void)
     clk_init.APB2CLKDivider = RCC_HCLK_DIV2;
     if( HAL_RCC_ClockConfig(&clk_init, FLASH_ACR_LATENCY_0WS) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
 /*--------------------------------------------SYSCLOCK IS SOURCED BY HSE--------------------------------------------*/
@@ -99,12 +99,12 @@ void UART2_Init(void)
 
     if(HAL_UART_Init(&huart2) != HAL_OK)
     {
-        Error_handler();
+        Error_Handler();
     }
 }
 
 
-void Error_handler(void)
+void Error_Handler(void)
 {
     while (1);
 }

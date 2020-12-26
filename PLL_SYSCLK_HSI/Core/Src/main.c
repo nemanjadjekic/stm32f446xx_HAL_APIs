@@ -5,6 +5,7 @@
  *      Author: nemanja
  */
 
+#include <stdio.h>
 #include <string.h>
 #include "main.h"
 
@@ -12,7 +13,7 @@
 #define FALSE 0
 
 void UART2_Init(void);
-void Error_handler(void);
+void Error_Handler(void);
 void SysCLK_Config(uint8_t clock_freq);
 
 UART_HandleTypeDef huart2;
@@ -33,7 +34,7 @@ int main(void)
     uint16_t sent_data_length = strlen(sent_data);
     if( HAL_UART_Transmit(&huart2, (uint8_t*) sent_data, sent_data_length, HAL_MAX_DELAY) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     memset(msg, 0, sizeof(msg));
@@ -139,12 +140,12 @@ void SysCLK_Config(uint8_t clock_freq)
 
     if( HAL_RCC_OscConfig(&osc_init) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     if( HAL_RCC_ClockConfig(&clk_init, FLatency) != HAL_OK )
     {
-        Error_handler();
+        Error_Handler();
     }
 
     /* SysTick Configuration */
@@ -165,12 +166,12 @@ void UART2_Init(void)
 
     if(HAL_UART_Init(&huart2) != HAL_OK)
     {
-        Error_handler();
+        Error_Handler();
     }
 }
 
 
-void Error_handler(void)
+void Error_Handler(void)
 {
     while (1);
 }
