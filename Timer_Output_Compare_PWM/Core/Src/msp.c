@@ -23,7 +23,7 @@ void HAL_MspInit(void)
 }
 
 
-void HAL_TIM_OC_MspInit(TIM_HandleTypeDef *htim)
+void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 {
     GPIO_InitTypeDef tim2OC_ch_gpios;
 
@@ -56,20 +56,6 @@ void HAL_TIM_OC_MspInit(TIM_HandleTypeDef *htim)
     /* NVIC Settings */
     HAL_NVIC_SetPriority(TIM2_IRQn, 15, 0);
     HAL_NVIC_EnableIRQ(TIM2_IRQn);
-}
-
-
-
-void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htimer)
-{
-    /* Enable clock for TIM6 peripheral */
-    __HAL_RCC_TIM6_CLK_ENABLE();
-
-    /* Enable IRQ of TIM6 */
-    HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
-
-    /* Setup the priority for TIM6_DAC_IRQn */
-    HAL_NVIC_SetPriority(TIM6_DAC_IRQn, 15, 0);
 }
 
 
