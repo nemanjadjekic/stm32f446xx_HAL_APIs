@@ -168,6 +168,7 @@ void TIMER2_Init(void)
     htimer2.Instance = TIM2;
     htimer2.Init.Period = 10000-1;
     htimer2.Init.Prescaler = 4;
+
     if( HAL_TIM_PWM_Init(&htimer2) != HAL_OK )
     {
         Error_Handler();
@@ -178,6 +179,7 @@ void TIMER2_Init(void)
     tim2PWM_Config.OCMode = TIM_OCMODE_PWM1;
     tim2PWM_Config.OCPolarity = TIM_OCPOLARITY_HIGH;
     tim2PWM_Config.Pulse = (htimer2.Init.Period * 25) / 100; /* 25% Duty Cycle */
+
     if( HAL_TIM_PWM_ConfigChannel(&htimer2, &tim2PWM_Config, TIM_CHANNEL_1) != HAL_OK )
     {
         Error_Handler();

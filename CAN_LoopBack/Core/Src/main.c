@@ -13,6 +13,7 @@ void Error_Handler(void);
 void GPIO_Init(void);
 void UART2_Init(void);
 void CAN1_Init(void);
+void CAN1_Tx(void);
 
 UART_HandleTypeDef huart2;
 CAN_HandleTypeDef hcan1;
@@ -23,10 +24,7 @@ int main(void)
     SystemClockConfig(SYS_CLK_FREQ_50MHz);
     GPIO_Init();
     CAN1_Init();
-
-
-    /* Starting a timer in interrupt mode */
-    HAL_TIM_Base_Start_IT(&htimer6);
+    CAN1_Tx();
 
     while(1);
 
@@ -130,18 +128,6 @@ void SystemClockConfig(uint8_t clock_freq)
 }
 
 
-void TIMER6_Init(void)
-{
-    htimer6.Instance = TIM6;
-    htimer6.Init.Prescaler = 24;
-    htimer6.Init.Period = 64000-1;
-    if( HAL_TIM_Base_Init(&htimer6) != HAL_OK )
-    {
-        Error_Handler();
-    }
-}
-
-
 void GPIO_Init(void)
 {
     __HAL_RCC_GPIOA_CLK_ENABLE();
@@ -168,6 +154,36 @@ void UART2_Init(void)
     {
         Error_Handler();
     }
+}
+
+
+void CAN1_Init(void)
+{
+    hcan1.Instance = NULL;
+    hcan1.Init.Mode = CAN_MODE_LOOPBACK;
+    hcan1.Init.AutoBusOff = DISABLE;
+    hcan1.Init.AutoRetransmission = ENABLE;
+    hcan1.Init.AutoWakeUp = DISABLE;
+    hcan1.Init.ReceiveFifoLocked = DISABLE;
+    hcan1.Init.TimeTriggeredMode = DISABLE;
+    hcan1.Init.TransmitFifoPriority = DISABLE;
+
+    /* CAN bit timing settings */
+    hcan1.Init.Prescaler = 5;
+    hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
+    hcan1.Init.TimeSeg1 = CAN_BS1_8TQ;
+    hcan1.Init.TimeSeg2 = CAN_BS2_1TQ;
+
+    if( HAL_CAN_Init(&hcan1) != HAL_OK )
+    {
+        Error_Handler();
+    }
+}
+
+
+void CAN1_Tx(void)
+{
+
 }
 
 

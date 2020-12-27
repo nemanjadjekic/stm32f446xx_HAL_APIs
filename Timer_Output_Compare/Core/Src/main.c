@@ -175,6 +175,7 @@ void TIMER2_Init(void)
     htimer2.Instance = TIM2;
     htimer2.Init.Period = 0xFFFFFFFF;
     htimer2.Init.Prescaler = 1;
+
     if( HAL_TIM_OC_Init(&htimer2) != HAL_OK )
     {
         Error_Handler();
@@ -183,6 +184,7 @@ void TIMER2_Init(void)
     timer2OC_Config.OCMode = TIM_OCMODE_TOGGLE;
     timer2OC_Config.OCPolarity = TIM_OCPOLARITY_HIGH;
     timer2OC_Config.Pulse = pulse1_value;
+
     if( HAL_TIM_OC_ConfigChannel(&htimer2, &timer2OC_Config, TIM_CHANNEL_1) != HAL_OK )
     {
         Error_Handler();

@@ -131,6 +131,7 @@ void TIMER6_Init(void)
     htimer6.Instance = TIM6;
     htimer6.Init.Prescaler = 9;
     htimer6.Init.Period = 50-1;
+
     if( HAL_TIM_Base_Init(&htimer6) != HAL_OK )
     {
         Error_Handler();

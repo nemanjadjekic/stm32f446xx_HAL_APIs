@@ -38,6 +38,7 @@ int main(void)
     memset(&osc_init, 0, sizeof(osc_init));
     osc_init.OscillatorType = RCC_OSCILLATORTYPE_HSE;
     osc_init.HSEState = RCC_HSE_BYPASS;
+
     if( HAL_RCC_OscConfig(&osc_init) != HAL_OK )
     {
         Error_Handler();
@@ -49,6 +50,7 @@ int main(void)
     clk_init.AHBCLKDivider = RCC_SYSCLK_DIV2;
     clk_init.APB1CLKDivider = RCC_HCLK_DIV2;
     clk_init.APB2CLKDivider = RCC_HCLK_DIV2;
+
     if( HAL_RCC_ClockConfig(&clk_init, FLASH_ACR_LATENCY_0WS) != HAL_OK )
     {
         Error_Handler();
