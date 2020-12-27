@@ -19,7 +19,6 @@ void TIMER2_Init(void);
 TIM_HandleTypeDef htimer2;
 UART_HandleTypeDef huart2;
 
-
 int main(void)
 {
     HAL_Init();

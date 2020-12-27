@@ -13,7 +13,6 @@ void Error_Handler(void);
 void TIMER6_Init(void);
 void GPIO_Init(void);
 
-
 TIM_HandleTypeDef htimer6;
 
 int main(void)

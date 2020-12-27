@@ -20,7 +20,6 @@ UART_HandleTypeDef huart2;
 
 char *sent_data = "This application is running!\r\n";
 
-
 int main(void)
 {
     char msg[100];

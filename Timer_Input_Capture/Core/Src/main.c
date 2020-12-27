@@ -17,7 +17,6 @@ void UART2_Init(void);
 void TIMER2_Init(void);
 void LSE_Configuration(void);
 
-
 TIM_HandleTypeDef htimer2;
 UART_HandleTypeDef huart2;
 

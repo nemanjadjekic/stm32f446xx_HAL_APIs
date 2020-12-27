@@ -5,8 +5,6 @@
  *      Author: nemanja
  */
 
-#include <stdio.h>
-#include <string.h>
 #include "main.h"
 #include "stm32f4xx_hal.h"
 
@@ -14,42 +12,23 @@ void SystemClockConfig(uint8_t clock_freq);
 void Error_Handler(void);
 void GPIO_Init(void);
 void UART2_Init(void);
-void TIMER2_Init(void);
+void CAN1_Init(void);
 
-TIM_HandleTypeDef htimer2;
 UART_HandleTypeDef huart2;
+CAN_HandleTypeDef hcan1;
 
 int main(void)
 {
-    uint16_t brightness = 0;
-
     HAL_Init();
     SystemClockConfig(SYS_CLK_FREQ_50MHz);
     GPIO_Init();
-    UART2_Init();
-    TIMER2_Init();
+    CAN1_Init();
 
-    if( HAL_TIM_PWM_Start(&htimer2, TIM_CHANNEL_1) != HAL_OK )
-    {
-        Error_Handler();
-    }
 
-    while(1)
-    {
-        while(brightness < htimer2.Init.Period)
-        {
-            brightness += 10;
-            __HAL_TIM_SET_COMPARE(&htimer2, TIM_CHANNEL_1, brightness);
-            HAL_Delay(1);
-        }
+    /* Starting a timer in interrupt mode */
+    HAL_TIM_Base_Start_IT(&htimer6);
 
-        while(brightness > 0)
-        {
-            brightness -= 10;
-            __HAL_TIM_SET_COMPARE(&htimer2, TIM_CHANNEL_1, brightness);
-            HAL_Delay(1);
-        }
-    }
+    while(1);
 
     return 0;
 }
@@ -151,6 +130,18 @@ void SystemClockConfig(uint8_t clock_freq)
 }
 
 
+void TIMER6_Init(void)
+{
+    htimer6.Instance = TIM6;
+    htimer6.Init.Prescaler = 24;
+    htimer6.Init.Period = 64000-1;
+    if( HAL_TIM_Base_Init(&htimer6) != HAL_OK )
+    {
+        Error_Handler();
+    }
+}
+
+
 void GPIO_Init(void)
 {
     __HAL_RCC_GPIOA_CLK_ENABLE();
@@ -160,30 +151,6 @@ void GPIO_Init(void)
     ledgpio.Mode = GPIO_MODE_OUTPUT_PP;
     ledgpio.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &ledgpio);
-}
-
-
-void TIMER2_Init(void)
-{
-    TIM_OC_InitTypeDef tim2PWM_Config;
-
-    htimer2.Instance = TIM2;
-    htimer2.Init.Period = 10000-1;
-    htimer2.Init.Prescaler = 4;
-    if( HAL_TIM_PWM_Init(&htimer2) != HAL_OK )
-    {
-        Error_Handler();
-    }
-
-    memset(&tim2PWM_Config, 0, sizeof(tim2PWM_Config));
-
-    tim2PWM_Config.OCMode = TIM_OCMODE_PWM1;
-    tim2PWM_Config.OCPolarity = TIM_OCPOLARITY_HIGH;
-    tim2PWM_Config.Pulse = 0;
-    if( HAL_TIM_PWM_ConfigChannel(&htimer2, &tim2PWM_Config, TIM_CHANNEL_1) != HAL_OK )
-    {
-        Error_Handler();
-    }
 }
 
 
