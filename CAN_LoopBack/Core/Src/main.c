@@ -5,6 +5,8 @@
  *      Author: nemanja
  */
 
+#include <stdio.h>
+#include <string.h>
 #include "main.h"
 #include "stm32f4xx_hal.h"
 
@@ -18,12 +20,27 @@ void CAN1_Tx(void);
 UART_HandleTypeDef huart2;
 CAN_HandleTypeDef hcan1;
 
+char *sent_data = "This application is running!\r\n";
+
 int main(void)
 {
     HAL_Init();
     SystemClockConfig(SYS_CLK_FREQ_50MHz);
     GPIO_Init();
+    UART2_Init();
     CAN1_Init();
+
+    uint16_t sent_data_length = strlen(sent_data);
+    if( HAL_UART_Transmit(&huart2, (uint8_t*) sent_data, sent_data_length, HAL_MAX_DELAY) != HAL_OK )
+    {
+        Error_Handler();
+    }
+
+    if( HAL_CAN_Start(&hcan1) != HAL_OK )
+    {
+        Error_Handler();
+    }
+
     CAN1_Tx();
 
     while(1);
@@ -159,9 +176,9 @@ void UART2_Init(void)
 
 void CAN1_Init(void)
 {
-    hcan1.Instance = NULL;
+    hcan1.Instance = CAN1;
     hcan1.Init.Mode = CAN_MODE_LOOPBACK;
-    hcan1.Init.AutoBusOff = DISABLE;
+    hcan1.Init.AutoBusOff = ENABLE;
     hcan1.Init.AutoRetransmission = ENABLE;
     hcan1.Init.AutoWakeUp = DISABLE;
     hcan1.Init.ReceiveFifoLocked = DISABLE;
@@ -183,7 +200,27 @@ void CAN1_Init(void)
 
 void CAN1_Tx(void)
 {
+    CAN_TxHeaderTypeDef TxHeader;
 
+    uint32_t TxMailbox;
+
+    char msg[50];
+    uint8_t msgTx[5] = {'H', 'E', 'L', 'L', 'O'};
+
+    TxHeader.DLC = 5;
+    TxHeader.StdId = 0x65D;
+    TxHeader.IDE = CAN_ID_STD;
+    TxHeader.RTR = CAN_RTR_DATA;
+
+    if( HAL_CAN_AddTxMessage(&hcan1, &TxHeader, msgTx, &TxMailbox) != HAL_OK )
+    {
+        Error_Handler();
+    }
+
+    while(HAL_CAN_IsTxMessagePending(&hcan1, TxMailbox));
+
+    sprintf(msg, "Message Transmitted!\r\n");
+    HAL_UART_Transmit(&huart2, (uint8_t *)msg, strlen(msg), HAL_MAX_DELAY);
 }
 
 
