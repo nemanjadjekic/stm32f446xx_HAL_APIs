@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file           : main.c
@@ -15,53 +14,18 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
-/* Includes ------------------------------------------------------------------*/
+
 #include <string.h>
 #include "main.h"
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim6;
-
 UART_HandleTypeDef huart2;
 extern uint8_t random_data[];
 
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM6_Init(void);
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 /**
  * @brief  The application entry point.
@@ -69,12 +33,6 @@ static void MX_TIM6_Init(void);
  */
 int main(void)
 {
-    /* USER CODE BEGIN 1 */
-
-    /* USER CODE END 1 */
-
-    /* MCU Configuration--------------------------------------------------------*/
-
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
     HAL_Init();
     SystemClock_Config();
@@ -83,6 +41,8 @@ int main(void)
     MX_GPIO_Init();
     MX_USART2_UART_Init();
     MX_TIM6_Init();
+
+    HAL_PWR_EnableSleepOnExit();
 
     /* Start with fresh SR (Status Register) of Timer to avoid any spurious interrupts */
     TIM6->SR = 0;
