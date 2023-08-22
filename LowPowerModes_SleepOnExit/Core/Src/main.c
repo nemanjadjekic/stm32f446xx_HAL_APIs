@@ -113,7 +113,7 @@ static void MX_TIM6_Init(void)
     htim6.Instance = TIM6;
     htim6.Init.Prescaler = 4999;
     htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-    htim6.Init.Period = 32 - 1;
+    htim6.Init.Period = 100 - 1;
     htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
     if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
     {
@@ -135,11 +135,11 @@ static void MX_TIM6_Init(void)
 static void MX_USART2_UART_Init(void)
 {
     huart2.Instance = USART2;
-    huart2.Init.BaudRate = 115200;
+    huart2.Init.BaudRate = 460800;
     huart2.Init.WordLength = UART_WORDLENGTH_8B;
     huart2.Init.StopBits = UART_STOPBITS_1;
     huart2.Init.Parity = UART_PARITY_NONE;
-    huart2.Init.Mode = UART_MODE_TX_RX;
+    huart2.Init.Mode = UART_MODE_TX;
     huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
     huart2.Init.OverSampling = UART_OVERSAMPLING_16;
     if (HAL_UART_Init(&huart2) != HAL_OK)

@@ -53,7 +53,7 @@ void SysTick_Handler(void)
  */
 void TIM6_DAC_IRQHandler(void)
 {
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
+//    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
     HAL_TIM_IRQHandler(&htim6);
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
+//    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
 }
