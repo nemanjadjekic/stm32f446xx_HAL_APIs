@@ -23,6 +23,7 @@ UART_HandleTypeDef huart2;
 extern uint8_t random_data[];
 
 void SystemClock_Config(void);
+void GPIO_AnalogConfig(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM6_Init(void);
@@ -41,6 +42,8 @@ int main(void)
     MX_GPIO_Init();
     MX_USART2_UART_Init();
     MX_TIM6_Init();
+
+    GPIO_AnalogConfig();
 
     HAL_PWR_EnableSleepOnExit();
 
@@ -99,6 +102,25 @@ void SystemClock_Config(void)
     {
         Error_Handler();
     }
+}
+
+/**
+ * @brief Config GPIO in analog mode
+ * @param None
+ * @retval None
+ */
+void GPIO_AnalogConfig(void)
+{
+    GPIO_InitTypeDef GPIO_A;
+    uint32_t gpio_pins = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 \
+                         GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7 \
+                         GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 \
+                         GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 \
+                         GPIO_PIN_14 | GPIO_PIN_15;
+
+    GPIO_A.Pin = gpio_pins;
+    GPIO_A.Mode = GPIO_MODE_ANALOG;
+    HAL_GPIO_INIT(&GPIO_A);
 }
 
 /**
