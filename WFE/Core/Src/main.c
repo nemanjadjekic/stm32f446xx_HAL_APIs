@@ -15,6 +15,7 @@
  ******************************************************************************
  */
 
+#include <stdio.h>
 #include <string.h>
 
 #include "main.h"
@@ -27,14 +28,14 @@ void GPIO_AnalogConfig(void);
 
 UART_HandleTypeDef huart2;
 
-char *data = "Testing WFI (Waiting for interrupt) Mode!\r\n";
-
 /**
  * @brief  The application entry point.
  * @retval int
  */
 int main(void)
 {
+    char msg[50];
+
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
     HAL_Init();
 
@@ -49,9 +50,23 @@ int main(void)
     /* Infinite loop */
     while (1)
     {
+        sprintf(msg, "Going to sleep mode! \r\n");
+        if (HAL_UART_Transmit(&huart2, (uint8_t*) msg,
+                (uint16_t) strlen((char*) msg), HAL_MAX_DELAY) != HAL_OK)
+        {
+            Error_Handler();
+        }
+
+        HAL_SuspendTick();
+
         /* Going to sleep mode */
-        __WFI();
+        __WFE();
         /* MCU resumes here when it wakes up */
+        HAL_ResumeTick();
+
+        sprintf(msg, "Woke Up! \r\n");
+        HAL_UART_Transmit(&huart2, (uint8_t*) msg,
+                (uint16_t) strlen((char*) msg), HAL_MAX_DELAY);
     }
 }
 
@@ -146,7 +161,7 @@ static void MX_GPIO_Init(void)
 
     /*Configure GPIO pin : B1_Pin */
     GPIO_InitStruct.Pin = B1_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+    GPIO_InitStruct.Mode = GPIO_MODE_EVT_FALLING;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
@@ -157,8 +172,10 @@ static void MX_GPIO_Init(void)
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
 
+#if 0
     HAL_NVIC_SetPriority(EXTI15_10_IRQn, 15, 0);
     HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+#endif
 
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
@@ -166,11 +183,7 @@ static void MX_GPIO_Init(void)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    if (HAL_UART_Transmit(&huart2, (uint8_t*) data,
-            (uint16_t) strlen((char*) data), HAL_MAX_DELAY) != HAL_OK)
-    {
-        Error_Handler();
-    }
+
 }
 
 void GPIO_AnalogConfig(void)
@@ -206,7 +219,8 @@ void GPIO_AnalogConfig(void)
 void Error_Handler(void)
 {
     __disable_irq();
-    while (1);
+    while (1)
+        ;
 }
 
 #ifdef  USE_FULL_ASSERT
