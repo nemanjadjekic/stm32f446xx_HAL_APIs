@@ -40,6 +40,7 @@ int main(void)
 
     /* Configure the system clock */
     SystemClock_Config();
+
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
     MX_USART2_UART_Init();
@@ -141,16 +142,16 @@ static void MX_GPIO_Init(void)
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_SLEEP_ENABLE();
 
-    /*Configure GPIO pin Output Level */
+    /* Configure GPIO pin Output Level */
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
-    /*Configure GPIO pin : B1_Pin */
+    /* Configure GPIO pin : B1_Pin */
     GPIO_InitStruct.Pin = B1_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-    /*Configure GPIO pin : LD2_Pin */
+    /* Configure GPIO pin : LD2_Pin */
     GPIO_InitStruct.Pin = LD2_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -206,6 +207,7 @@ void GPIO_AnalogConfig(void)
 void Error_Handler(void)
 {
     __disable_irq();
+
     while (1);
 }
 
